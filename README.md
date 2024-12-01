@@ -61,24 +61,80 @@ FROM users;
 
 ## **Data Analysis Steps**
 
-1. **Identify Top Artists per User**  
-   - Analyse which artist the user interacts with the most by examining the frequency of interactions (e.g., plays, likes, shares).  
-   - Group data by `user_id` and `artist_id` to identify favourite artists.  
+## **Data Analysis**
+1. **Identify Most Interacted Artists**  
+   Analyze the `user_events` table to find the artists each user interacts with the most based on interaction types like `play_track`, `like_track`, or `follow_artist`.
+   
+2. **Calculate Listening Duration**  
+   Utilize the `visits` table to calculate the total time users spend listening to each artist (`end_time - start_time`).
 
-2. **Track Listening Duration**  
-   - Measure how long the user listens to an artist by calculating the total interaction time for "play_track" events.  
-   - Use this data to identify the user's deeper engagement with specific artists.  
-
-3. **Analyse User Interaction Patterns Over Time**  
-   - Examine user engagement trends over different periods, such as hours of the day, days of the week, or specific months.  
-   - Use this analysis to recommend artists during peak engagement times.  
+3. **Analyze Interaction Patterns Over Time**  
+   Examine the `sessions` table to understand user activity trends and peak engagement hours.
 
 4. **Regional Engagement Trends**  
-   - Use the `timezone` column in the `users` table to analyse user behaviour by region.  
-   - Identify regional preferences to personalise recommendations for specific timezones or locations.  
+   Use the `users` table to analyze regional preferences based on the `timezone` column.
 
-5. **User Behaviour Clustering**  
-   - Group users into behavioural categories based on interaction frequency and engagement scores.  
-   - Examples of clusters include "explorers" (users who engage with many artists) and "loyalists" (users who engage deeply with a few artists).  
+5. **User Behavior Clustering**  
+   Cluster users with similar interaction patterns using data from `user_events` and `engagement_scores` to recommend artists preferred by similar users.  
+
+---
+---
+
+## **Implementation Plan**
+
+### **Step 1: Analyze User Interactions**
+- **Data Extraction**:
+  - Query the `user_events` and `engagement_scores` tables to determine interaction weights.
+  - Aggregate `visits` data to rank artists based on engagement duration.
+- **Pattern Identification**:
+  - Rank artists by engagement score for each user.
+  - Segment users by `timezone` for regional trends.
+
+### **Step 2: Build a Recommendation Engine**
+1. **Content-Based Filtering**:
+   - Recommend artists with similar interaction types or genres (derived from the `tracks` and `user_events` tables).
+2. **Collaborative Filtering**:
+   - Use user clustering to identify and share recommendations among users with similar preferences.
+
+### **Step 3: Integrate Recommendations into the UI**
+- **Artist Pages**:
+  - Add a "Recommended Artists" section based on:
+    - Similar artists or top-trending artists in the same region.
+- **User Dashboards**:
+  - Personalize the dashboard to highlight:
+    - Recently discovered artists.
+    - Artists trending in the user's region.
+
+### **Step 4: Implementation in Codebase**
+1. **Backend**:
+   - Develop SQL queries to extract recommended artists using existing tables (`user_events`, `engagement_scores`, `visits`).
+   - Create API endpoints to deliver recommendations dynamically.
+2. **Frontend**:
+   - Add dynamic components to display personalized recommendations.
+   - Implement filtering options for users to refine their recommendations.
+
+---
+
+## **Evaluation Plan**
+
+### **Metrics**
+1. **User Engagement**:
+   - Monitor click-through rates (CTR) and time spent engaging with recommendations.
+2. **Conversion Rates**:
+   - Measure actions like "follow artist" or "add track to playlist" on recommendations.
+3. **Diversity and Novelty**:
+   - Evaluate how often users interact with new or lesser-known artists.
+
+### **Feedback Collection**
+- Include a feedback mechanism (e.g., thumbs-up/thumbs-down) on recommended artists.
+- Use survey forms to gather qualitative insights on recommendation relevance.
+
+### **AB Testing**
+- Test multiple recommendation algorithms (content-based, collaborative filtering, hybrid).
+- Compare user engagement metrics between groups exposed to recommendations and a control group.
+
+### **Iteration**
+- Refine the recommendation engine based on feedback and performance metrics.
+- Regularly update the engine with fresh interaction data.
 
 ---
