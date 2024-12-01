@@ -26,6 +26,7 @@
 		"better-sqlite3": "^11.1.2",
 		"chart.js": "^4.4.6",
 		"chartjs-chart-matrix": "^2.0.1",
-		"chartjs-plugin-annotation": "^3.1.0"
+		"chartjs-plugin-annotation": "^3.1.0",
+		"huddled-takehome": "file:"
 	}
 }
