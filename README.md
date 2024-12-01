@@ -56,3 +56,18 @@ FROM users;
 ```
 
 # Task 3 ANSWERS
+
+---
+
+## **Data Analysis Steps**
+
+1. **Identify Top Artists per User**  
+
+2. **Track Listening Duration**  
+
+3. **Analyse User Interaction Patterns Over Time**  
+
+4. **Regional Engagement Trends**  
+
+5. **User Behaviour Clustering**  
+---
