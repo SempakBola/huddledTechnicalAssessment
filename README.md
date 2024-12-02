@@ -59,82 +59,93 @@ FROM users;
 
 ---
 
-## **Data Analysis Steps**
+## **Data Analysis Steps (EDA)**
 
-## **Data Analysis**
 1. **Identify Most Interacted Artists**  
-   Analyze the `user_events` table to find the artists each user interacts with the most based on interaction types like `play_track`, `like_track`, or `follow_artist`.
-   
+   - Analyze the `user_events` table to determine the artists each user interacts with the most, based on interaction types like `play_track`, `like_track`, or `follow_artist`.
+
 2. **Calculate Listening Duration**  
-   Utilize the `visits` table to calculate the total time users spend listening to each artist (`end_time - start_time`).
+   - Use the `visits` table to compute the total time users spend listening to each artist (`end_time - start_time`).
 
 3. **Analyze Interaction Patterns Over Time**  
-   Examine the `sessions` table to understand user activity trends and peak engagement hours.
+   - Examine the `sessions` table to identify user activity trends, such as peak engagement hours.
 
 4. **Regional Engagement Trends**  
-   Use the `users` table to analyze regional preferences based on the `timezone` column.
+   - Utilize the `users` table to analyze regional preferences based on the `timezone` column.
 
 5. **User Behavior Clustering**  
-   Cluster users with similar interaction patterns using data from `user_events` and `engagement_scores` to recommend artists preferred by similar users.  
-
----
----
-
-## **Implementation Plan**
-
-### **Step 1: Analyze User Interactions**
-- **Data Extraction**:
-  - Query the `user_events` and `engagement_scores` tables to determine interaction weights.
-  - Aggregate `visits` data to rank artists based on engagement duration.
-- **Pattern Identification**:
-  - Rank artists by engagement score for each user.
-  - Segment users by `timezone` for regional trends.
-
-### **Step 2: Build a Recommendation Engine**
-1. **Content-Based Filtering**:
-   - Recommend artists with similar interaction types or genres (derived from the `tracks` and `user_events` tables).
-2. **Collaborative Filtering**:
-   - Use user clustering to identify and share recommendations among users with similar preferences.
-
-### **Step 3: Integrate Recommendations into the UI**
-- **Artist Pages**:
-  - Add a "Recommended Artists" section based on:
-    - Similar artists or top-trending artists in the same region.
-- **User Dashboards**:
-  - Personalize the dashboard to highlight:
-    - Recently discovered artists.
-    - Artists trending in the user's region.
-
-### **Step 4: Implementation in Codebase**
-1. **Backend**:
-   - Develop SQL queries to extract recommended artists using existing tables (`user_events`, `engagement_scores`, `visits`).
-   - Create API endpoints to deliver recommendations dynamically.
-2. **Frontend**:
-   - Add dynamic components to display personalized recommendations.
-   - Implement filtering options for users to refine their recommendations.
+   - Cluster users with similar interaction patterns using data from `user_events` and `engagement_scores` to recommend artists preferred by similar users.
 
 ---
 
-## **Evaluation Plan**
+## **Data Preprocessing/Cleaning**
 
-### **Metrics**
-1. **User Engagement**:
-   - Monitor click-through rates (CTR) and time spent engaging with recommendations.
-2. **Conversion Rates**:
-   - Measure actions like "follow artist" or "add track to playlist" on recommendations.
-3. **Diversity and Novelty**:
-   - Evaluate how often users interact with new or lesser-known artists.
+1. **Clean Missing or Incorrect Values**  
+   - Ensure all critical columns (`user_id`, `artist_id`, `event_type`, `score`) are complete and free of invalid values.
 
-### **Feedback Collection**
-- Include a feedback mechanism (e.g., thumbs-up/thumbs-down) on recommended artists.
-- Use survey forms to gather qualitative insights on recommendation relevance.
+2. **Normalize Timezones**  
+   - Validate and standardize the `timezone` column in the `users` table for consistent regional analysis.
 
-### **AB Testing**
-- Test multiple recommendation algorithms (content-based, collaborative filtering, hybrid).
-- Compare user engagement metrics between groups exposed to recommendations and a control group.
+3. **Encode Categorical Data**  
+   - Transform interaction types in `event_type` into numeric scores using the `engagement_scores` table.
 
-### **Iteration**
-- Refine the recommendation engine based on feedback and performance metrics.
-- Regularly update the engine with fresh interaction data.
+4. **Aggregate User-Artist Interactions**  
+   - Combine interaction data from `user_events` and `visits` tables to create a comprehensive engagement dataset.
+
+---
+
+## **Model Training**
+
+1. **Collaborative Filtering Model**  
+   - Use user-item interaction data to train a collaborative filtering model for recommending artists based on similar user preferences.
+
+2. **Content-Based Filtering Model**  
+   - Train a model using artist metadata from the `tracks` and `user_events` tables to recommend artists with similar features.
+
+3. **Hybrid Recommendation Model**  
+   - Combine collaborative and content-based filtering to improve recommendation accuracy.
+
+4. **Regional Model Training**  
+   - Customize models based on regional data extracted using the `timezone` column.
+
+---
+
+## **Testing/Evaluation**
+
+1. **User Engagement Metrics**
+   - Evaluate recommendation success based on click-through rates (CTR) and the time spent engaging with suggested artists.
+
+2. **Conversion Rates**
+   - Measure actions taken on recommendations, such as "follow artist" or "add track to playlist."
+
+3. **Diversity and Novelty**
+   - Assess how often users interact with new or less familiar artists.
+
+4. **AB Testing**
+   - Compare different recommendation models (content-based, collaborative, hybrid) to identify the most effective algorithm.
+
+5. **Feedback Collection**
+   - Include a thumbs-up/thumbs-down feedback mechanism on recommended artists to refine the model.
+
+---
+
+## **Integrating into the Web App**
+
+1. **Backend Integration**
+   - Extend the existing API to include recommendation endpoints that dynamically fetch suggested artists for each user.
+   - Use SQL queries on `user_events`, `visits`, and `engagement_scores` tables to deliver personalized recommendations.
+
+2. **Frontend Implementation**
+   - Add a "Recommended Artists" section to artist pages and user dashboards.
+   - Ensure recommendations are interactive, allowing users to explore and filter suggestions.
+
+3. **Real-Time Updates**
+   - Implement real-time updates to recommendations as users interact with the platform.
+
+4. **Regional Personalization**
+   - Highlight trending artists in the user's region based on aggregated engagement scores from the `timezone` column.
+
+5. **Scalability**
+   - Design the recommendation system to handle increasing user interactions and artist data efficiently.
 
 ---
