@@ -81,7 +81,7 @@ FROM users;
 ## **Data Preprocessing/Cleaning**
 
 1. **Clean Missing or Incorrect Values**  
-   - Ensure all critical columns (`user_id`, `artist_id`, `event_type`, `score`) are complete and free of invalid values.
+   - Ensure all critical columns (e.g. `user_id`, `artist_id`, `event_type`) are complete and free of invalid values.
 
 2. **Normalize Timezones**  
    - Validate and standardize the `timezone` column in the `users` table for consistent regional analysis.
